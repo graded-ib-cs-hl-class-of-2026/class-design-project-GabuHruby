@@ -28,6 +28,11 @@ public class App {
     // Borders and symbols https://www.w3.org/TR/xml-entity-names/025.html, and
     // https://www.alt-codes.net/arrow_alt_codes.php
 
+    /*
+     * HASHMAPS learned from: https://builtin.com/articles/hashmap-in-java#:~:text=HashMap%20is%20a%20data%20structure%20that%20uses%20the%20Map%20interface,data%20based%20on%20unique%20keys. 
+     * "HashMap is a data structure that uses the Map interface and a hash table for storing key-value pairs. It’s a widely used data structure in Java that provides efficient access and manipulation of data based on unique keys."
+     * In my own words, it is a data structure that allows you to assaign a key to a specific value, making it easier to access the value using the key.
+     */
     private HashMap<String, Deck> decks;
     private final Printer printer = new Printer();
 
@@ -69,7 +74,7 @@ public class App {
      */
     public void printMenu() {
         while(true){
-            if (decks.size() == 0) {
+            if (decks.isEmpty()) {
                 printer.output(BOLD + "No decks available. Please add a deck first." + RESET);
             } else {
                 printer.output(BOLD + "\nAvailable Decks: " + RESET);
@@ -117,9 +122,9 @@ public class App {
      * * @param saved boolean to check if the changes were saved or not
      */
     public void printGoodbye(boolean saved) {
-        String filler = "";
-        String spaceBefore = "";
-        String spaceAfter = "";
+        String filler;
+        String spaceBefore;
+        String spaceAfter;
         if(!saved){ 
             filler = "without saving";
             spaceBefore = "         ";
@@ -163,18 +168,24 @@ public class App {
 
             String choice = printer.input();
             if(choice.equals("e")){
-                return;
+                break;
             }
-            int deckIndex = Integer.parseInt(choice);
-            if (deckIndex > 0 && deckIndex <= decks.size()){
-                String selectedDeckName = (String) decks.keySet().toArray()[deckIndex - 1];
-                Deck chosenDeck = decks.get(selectedDeckName);
-
-                deckMenu(chosenDeck);
-                return;
-            } else {
+            try {
+                int deckIndex = Integer.parseInt(choice);   
+                if (deckIndex > 0 && deckIndex <= decks.size()){
+                    String selectedDeckName = (String) decks.keySet().toArray()[deckIndex - 1];
+                    Deck chosenDeck = decks.get(selectedDeckName);
+    
+                    deckMenu(chosenDeck);
+                    break;
+                } else {
+                    printer.output("⚠️ Invalid choice. Please try again.");
+                } 
+            } catch (Exception e) {
                 printer.output("⚠️ Invalid choice. Please try again.");
             }
+            
+            
         }
     }
     
@@ -219,7 +230,7 @@ public class App {
         while(true){
             if(deck.getTotalCardCount() == 0){
                 printer.output("THERE ARE NO CARDS IN THIS DECK ⚠️");
-                return;
+                break;
             }
             
             printer.output("\nPlease select a card to remove(press e to exit/cancel): ");
@@ -228,7 +239,7 @@ public class App {
             }
             String response = printer.input();
             if(response.equals("e")){
-                return;
+                break;
             }
 
             int indexCard = Integer.parseInt(response);
@@ -240,10 +251,10 @@ public class App {
                 response = printer.input();
 
                 if(response.equals("n")){
-                    return;
+                    break;
                 }else if(!response.equals("y")){
                     printer.output("⚠️ Invalid choice. Returning...");
-                    return;
+                    break;
                 }
 
             }else{
@@ -260,24 +271,22 @@ public class App {
         while(true){
             if(deck.getTotalCardCount() == 100){
                 printer.output("Maximum card limit reached ⚠️");
-                return;
+                break;
             }
             printer.output("Add a question/term (press e to exit/cancel):");
             String question = printer.input();
 
             if(question.equals("e")){
-                return;
+                break;
             }else{
                 printer.output("\nAdd a answer/definition (press e to exit/cancel):");
                 String answer = printer.input();
 
                 if(answer.equals("e")){
-                    return;
+                    break;
                 }else{
                     Card card = new Card(question, answer);
                     deck.setCard(card);
-
-                    addCard(deck);
                 }
             }
         }
@@ -292,21 +301,22 @@ public class App {
         if(deck.getTotalCardCount() == 0){
             printer.output(BOLD + "THERE ARE NO CARDS IN THIS DECK ⚠️" + RESET);
             deck.resetDeck();
-            return;
-        }
+        }else{
         Card card;
-        while ((card = deck.getNextCard()) != null) {
-            printer.output("Question: " + card.getQuestion());
-            String answer = printer.input();
-            if (answer.equals(card.getAnswer())) {
-                printer.output("\nCorrect! ✅" + "\n");
-            } else if (answer.equals("e")){
-                return;
-            }else {
-                printer.output("\nIncorrect ❌. The correct answer is: " + card.getAnswer() + "\n");
+        deck.shuffle();
+            while ((card = deck.getNextCard()) != null) {
+                printer.output("Question: " + card.getQuestion());
+                String answer = printer.input();
+                if (answer.equals(card.getAnswer())) {
+                    printer.output("\nCorrect! ✅" + "\n");
+                } else if (answer.equals("e")){
+                    break;
+                }else {
+                    printer.output("\nIncorrect ❌. The correct answer is: " + card.getAnswer() + "\n");
+                }
             }
+            deck.resetDeck();
         }
-        deck.resetDeck();
     }
 
     /**
@@ -332,16 +342,18 @@ public class App {
         while(true){
             if(decks.isEmpty()){
                 printer.output("THERE ARE NO DECKS ⚠️");
-                return;
+                break;
             }
             
             printer.output("\nPlease select a deck to remove(press e to exit/cancel): ");
-            for (int i = 0; i < decks.size(); i++) {
-                printer.output(i+1 + ". " + decks.keySet().toArray()[i]);
+            int i = 0;
+            for (String key : decks.keySet()) {
+                printer.output(i + 1 + ". " + key);
+                i++;
             }
             String deckToRemove = printer.input();
             if(deckToRemove.equals("e")){
-                return;
+                break;
             }
             try {
                 int deckToRemoveIndex = Integer.parseInt(deckToRemove);

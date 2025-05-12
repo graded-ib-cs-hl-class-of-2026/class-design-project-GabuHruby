@@ -5,22 +5,29 @@ public class Deck {
     private int totalCards = 0;
 
     /**
-     * Get cards from the deck
+     * Get the next card from the deck
      */
     public Card getNextCard() {
+        if (currentCardIndex < totalCards) {
+            Card nextCard = cards[currentCardIndex];
+            currentCardIndex++; 
+            return nextCard;
+        } else {
+            System.out.println("No more cards in the deck.");
+            return null;
+        }
+    }
+
+    /**
+     * Shuffles the deck of cards using the Fisher-Yates shuffle algorithm
+     */
+    public void shuffle() {
         //fisher yates shuffle the deck
         for (int i = totalCards - 1; i > 0; i--) {
             int j = (int) (Math.random() * (i + 1));
             Card temp = cards[i];
             cards[i] = cards[j];
             cards[j] = temp;
-        }
-
-        if (currentCardIndex < totalCards) {
-            return cards[currentCardIndex++];
-        } else {
-            System.out.println("No more cards in the deck.");
-            return null;
         }
     }
 
@@ -54,22 +61,10 @@ public class Deck {
      * @param i
      */
     public void removeCard(int i){
-        Card[] TEMP_cards = cards;
-        Card[] new_arr = new Card[100];
-
-        int k = 0;
-        int j = 0;
-
-        while(k < totalCards){
-            if(k == i){
-                k++;
-            }else{
-                new_arr[j] = TEMP_cards[k];
-                k++;
-                j++;
-            }
+        for (int j = i; j < totalCards - 1; j++) {
+            cards[j] = cards[j + 1];
         }
-        cards = new_arr;
+        cards[totalCards-1] = null;
         totalCards--;
     }
 
