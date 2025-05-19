@@ -79,8 +79,7 @@ public class App {
             } else {
                 printer.output(BOLD + "\nAvailable Decks: " + RESET);
                 for (String deckName : decks.keySet()) {
-                    System.out.print(BOLD + " ↪ " + RESET);
-                    printer.output(deckName);
+                    printer.output(BOLD + " ↪ " + RESET + deckName);
                 }
             }
             printer.output("\n1. Choose Decks");
@@ -273,7 +272,7 @@ public class App {
                 printer.output("Maximum card limit reached ⚠️");
                 break;
             }
-            printer.output("Add a question/term (press e to exit/cancel):");
+            printer.output("\nAdd a question/term (press e to exit/cancel):");
             String question = printer.input();
 
             if(question.equals("e")){
@@ -323,7 +322,7 @@ public class App {
      * This method creates a new deck and adds it to the decks list
      */
     public void addDeck() {
-        printer.output("What is the name of the deck you want to create? (press e to exit/cancel)");
+        printer.output("\nWhat is the name of the deck you want to create? (press e to exit/cancel)");
         String deckName = printer.input();
         if(deckName.equals("e")){
             return;
@@ -404,7 +403,7 @@ public class App {
             printer.closeFile();
 
         } catch (Exception e) {
-            System.out.println("Error reading file: " + e.getMessage());
+            printer.output("Error reading file: " + e.getMessage());
         }
 
 
@@ -427,7 +426,7 @@ public class App {
         try {
             printer.saveToFile("flashcards.txt", textToSave);
         } catch (Exception e) {
-            System.out.println("Error saving file: " + e.getMessage());
+            printer.output("Error saving file: " + e.getMessage());
         }
     }
 
