@@ -1,0 +1,16 @@
+Economics
+What is Unemployment?
+Unemployment is the number of unemployed people, defined as all people above a certain age, who are not working and are actively looking for a job
+What is Inflation?
+Inflation is a constant or continuous increase in average price levels
+
+Computer Science
+What is a LAN
+Local Area Network
+What is a WAN
+Wide Area Network
+What is VPN
+Virtual Private Network
+What is Node
+A device connected to the network
+
